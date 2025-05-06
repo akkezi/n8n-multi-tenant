@@ -20,6 +20,7 @@ A scalable multi-tenant deployment solution for n8n workflow automation, featuri
 - 📊 **Traefik dashboard** - Monitor and manage routing
 - 🐳 **Docker-based** - Easy deployment and scaling
 
+
 ## 🚀 Quick Start
 
 ### Prerequisites
@@ -42,33 +43,39 @@ cd n8n-multi-tenant
 docker compose up -d
 ```
 
-## 🛠️ Configuration
+## 📂 Project Structure
+```
+n8n-multi-tenant/
+├── .env                          # Environment variables configuration
+├── generate-certs.sh             # SSL certificate generation script
+├── docker-compose.yml            # Main Docker Compose file
+├── init-db-multi-tenant.sh       # Database initialization script
+├── traefik-dynamic.yml           # Traefik dynamic configuration
+└── templates/                    # Tenant management templates
+    ├── add-tenant.sh             # Script to add new tenants
+    ├── delete-all-tenants.sh     # Script to remove all tenants
+    ├── tenant-template.yml       # Template for new tenant services
+    └── traefik-middleware.yml    # Template for Traefik middlewares
+```
+
+
+## 🔧 Configuration
+
 ### Environment Variables
 Edit the **.env** file to configure your deployment
 ```
-# Postgres
-POSTGRES_USER=changeUser
-POSTGRES_PASSWORD=changePassword
+# Postgres Configuration
+POSTGRES_USER=your_user
+POSTGRES_PASSWORD=your_secure_password
 
-# Traefik
-DOMAIN_NAME=docker-standalone.lab.local
-LETSENCRYPT_EMAIL=contact@lab.local
-TRAEFIK_AUTH_CREDENTIALS="admin:$$apr1$$r3vKEUbE$$3LEU7AIoxxRXUV623KnlO1" # Password: admin
+# Traefik Configuration
+DOMAIN_NAME=yourdomain.com
+LETSENCRYPT_EMAIL=your@email.com
 
-# General
-GENERIC_TIMEZONE=Europe/Paris
-
-# Tenant 1
+# Tenant Configuration
 TENANT1_SUBFOLDER=tenant1
 TENANT1_DB=n8n_tenant1
-TENANT1_USER=n8n_tenant1_user
-TENANT1_PASSWORD=n8n_tenant1_pass
-
-# Tenant 2
-TENANT2_SUBFOLDER=tenant2
-TENANT2_DB=n8n_tenant2
-TENANT2_USER=n8n_tenant2_user
-TENANT2_PASSWORD=n8n_tenant2_pass
+...
 ```
 
 ### Important Notes
@@ -76,19 +83,21 @@ TENANT2_PASSWORD=n8n_tenant2_pass
 2. Set your actual domain name in **DOMAIN_NAME**
 3. For production use, consider using Let's Encrypt certificates instead of self-signed ones
 
-## 🏢 Usage
-### Accessing Services
 
+## 🏢 Usage
+
+### 🔗 Accessing Services
 >Traefik Dashboard: https://yourdomain.com/dashboard/
 >    - Username: admin
 >    - Password: admin (unless changed in .env)
-
 
 >n8n Instances:
 >    - Tenant 1: https://yourdomain.com/tenant1
 >    - Tenant 2: https://yourdomain.com/tenant2
 
-### Managing Tenants
+
+## 🏗️ Managing Tenants
+
 #### Adding a New Tenant
 1. Run the add tenant script
 ```
@@ -103,6 +112,7 @@ TENANT2_PASSWORD=n8n_tenant2_pass
     - Create a new database and user
     - Update configuration files
     - Deploy the new tenant
+
 #### Deleting All Tenants
 1. Run the delete script
 ```
@@ -124,12 +134,27 @@ To generate new self-signed certificates
 >1. Setting a valid domain name in **.env**
 >2. Ensuring your server is accessible from the internet on ports 80 and 443
 >3. Providing a valid email in **LETSENCRYPT_EMAIL**
-   
-## Troubleshooting
+
+
+## 🛠 Troubleshooting
+
 ### Certificate errors
-
+- For development, you'll need to trust the self-signed certificate
+- For production, use Let's Encrypt by setting a valid domain
 ### Database connection issues
-
+- Verify the PostgreSQL container is running: **docker compose ps**
+- Check logs: **docker compose logs postgres**
 ### Traefik routing problems
-
+- Check Traefik logs: **docker compose logs traefik**
+- Verify the Traefik dashboard for routing configuration
 ### Tenant creation fails
+- Check the log file: **./templates/tenant_deployment.log**
+- Verify available disk space and Docker resources
+
+
+## 📜 License
+MIT License - See LICENSE for details.
+
+
+## 🤝 Contributing
+Pull requests are welcome! Please open an issue first to discuss changes.
